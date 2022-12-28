@@ -529,9 +529,9 @@ class MiniGraphCard extends LitElement {
 
     const oneMinInHours = 1 / 60;
     now.setMilliseconds(now.getMilliseconds() - getMilli(offset * id + oneMinInHours));
-    const end = getTime(now, format, this._hass.language);
+    const end = getTime(now, format, this.config.language || this._hass.language);
     now.setMilliseconds(now.getMilliseconds() - getMilli(offset - oneMinInHours));
-    const start = getTime(now, format, this._hass.language);
+    const start = getTime(now, format, this.config.language || this._hass.language);
 
     this.tooltip = {
       value,
@@ -573,7 +573,7 @@ class MiniGraphCard extends LitElement {
               ${this.computeState(entry.state)} ${this.computeUom(0)}
             </span>
             <span class="info__item__time">
-              ${entry.type !== 'avg' ? getTime(new Date(entry.last_changed), this.config.format, this._hass.language) : ''}
+              ${entry.type !== 'avg' ? getTime(new Date(entry.last_changed), this.config.format, this.config.language || this._hass.language) : ''}
             </span>
           </div>
         `)}
@@ -695,13 +695,16 @@ class MiniGraphCard extends LitElement {
     const value_factor = 10 ** this.config.value_factor;
 
     if (dec === undefined || Number.isNaN(dec) || Number.isNaN(state)) {
-      return this.numberFormat(Math.round(state * value_factor * 100) / 100, this._hass.language);
+      return this.numberFormat(
+        Math.round(state * value_factor * 100) / 100,
+        this.config.language || this._hass.language,
+      );
     }
 
     const x = 10 ** dec;
     return this.numberFormat(
       (Math.round(state * value_factor * x) / x).toFixed(dec),
-      this._hass.language, dec,
+      this.config.language || this._hass.language, dec,
     );
   }
 

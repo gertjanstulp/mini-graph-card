@@ -129,6 +129,7 @@ export default (config) => {
     state_map: [],
     cache: true,
     value_factor: 0,
+    language: 'en',
     tap_action: {
       action: 'more-info',
     },
